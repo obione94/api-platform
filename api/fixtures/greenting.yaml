@@ -1,0 +1,3 @@
+App\Entity\Greeting:
+    comment_{1..1000}:
+        name: <name()>
