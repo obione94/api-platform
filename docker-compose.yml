@@ -4,12 +4,14 @@ services:
   php:
     build:
       context: ./api
-      target: app_php
+      target: app_php_dev
     depends_on:
       - database
     restart: unless-stopped
     volumes:
       - php_socket:/var/run/php
+      - ./api/var:/srv/app/var:rw
+      - ./api:/srv/app:rw
     healthcheck:
       interval: 10s
       timeout: 3s

@@ -2,15 +2,20 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use App\Tests\Tools\AbstractApiTestCase;
+use App\Tests\Tools\User;
 
-class GreetingsTest extends ApiTestCase
+class GreetingsTest extends AbstractApiTestCase
 {
     public function testCreateGreeting(): void
     {
-        static::createClient()->request('POST', '/greetings', ['json' => [
-            'name' => 'Kévin',
-        ]]);
+        $token = (new User())->getToken( static::createClient(),'test@example.com','$3CR3T');
+        static::createClient()->request('POST', '/greetings',
+            [
+                'json' => ['name' => 'Kévin'],
+                'auth_bearer'=> $token,
+            ]
+        );
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains([
