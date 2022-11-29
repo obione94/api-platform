@@ -21,7 +21,8 @@
 ###< symfony/phpunit-bridge ###
 
 ###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
+### for ci git hub :( forgive me
+#/config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 
 ###> phpunit/phpunit ###
