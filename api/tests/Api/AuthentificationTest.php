@@ -23,10 +23,10 @@ class AuthenticationTest extends AbstractApiTestCase
         $this->assertArrayHasKey('token', $json);
 
         // test not authorized
-        $client->request('GET', '/greetings');
+        $client->request('GET', '/api/greetings');
         $this->assertResponseStatusCodeSame(401);
         // test authorized
-        $client->request('GET', '/greetings', ['auth_bearer' => $json['token']]);
+        $client->request('GET', '/api/greetings', ['auth_bearer' => $json['token']]);
         $this->assertResponseIsSuccessful();
     }
 }

@@ -10,7 +10,7 @@ class GreetingsTest extends AbstractApiTestCase
     public function testCreateGreeting(): void
     {
         $token = (new User())->getToken( static::createClient(),'test@example.com','$3CR3T');
-        static::createClient()->request('POST', '/greetings',
+        static::createClient()->request('POST', '/api/greetings',
             [
                 'json' => ['name' => 'Kévin'],
                 'auth_bearer'=> $token,

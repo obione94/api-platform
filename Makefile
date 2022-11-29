@@ -50,7 +50,7 @@ clean-vendor: cc-hard ## Suppression du répertoire vendor puis un réinstall
 cc:	## Vider le cache
 	$(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction
 
-cc-test:	## Vider le cache de l'environnement de test
+cc-test:	## Vider le cache de lenvironnement de test
 	$(SYMFONY_CONSOLE) c:c --env=test
 
 cc-hard: ## Supprimer le répertoire cache
@@ -60,7 +60,7 @@ dsc-test: cc-test  ## Creation BDD sqlLite de test
 	$(SH_PHP_DOCKER_COMPOSE_EXEC) "bin/console doctrine:schema:update --force --env=test && cp var/cache/test/app_test.db var/cache/test/original_test.db"
 
 test-unit: ## clearlaunch test unit
-	$(SH_PHP_DOCKER_COMPOSE_EXEC) "XDEBUG_MODE=coverage bin/phpunit --coverage-html ./var/coverage"
+	$(SH_PHP_DOCKER_COMPOSE_EXEC) "bin/phpunit --coverage-html ./var/coverage"
 ## —— Others 🛠️️ ———————————————————————————————————————————————————————————————
 help: ## Liste des commandes
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
