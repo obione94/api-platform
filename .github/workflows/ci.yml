@@ -43,6 +43,6 @@ jobs:
           docker compose exec -T php bin/console doctrine:schema:update --force --env=test 
           docker compose exec -T php cp var/cache/test/app_test.db var/cache/test/original_test.db
       - name: PHPUnit
-        run: docker compose exec -T php bin/phpunit
+        run: docker compose exec -T php bin/phpunit --coverage-clover coverage.xml
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate --env=test --skip-sync
