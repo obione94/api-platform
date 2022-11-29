@@ -1,3 +1,3 @@
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
+        url: 'sqlite:////srv/app/var/cache/test/app_test.db'
