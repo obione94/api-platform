@@ -22,8 +22,9 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $user->setUserName("test@example.com");
         $password = $this->container->get('security.password_hasher')->hashPassword($user, '$3CR3T');
         $user->setPassword($password);
-        dump($password);
         $user->setRoles(["ROLE_ADMIN"]);
+        $user->setIsVerified(true);
+
         $manager->persist($user);
         $manager->flush();
     }

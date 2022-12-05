@@ -47,8 +47,8 @@ clean-vendor: cc-hard ## Suppression du répertoire vendor puis un réinstall
 	$(PHP_DOCKER_COMPOSE_EXEC) rm -Rf vendor
 	$(COMPOSER) install
 
-cc:	## Vider le cache
-	$(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction
+cl-hard:	## Vider le cache
+	$(PHP_DOCKER_COMPOSE_EXEC) rm -Rf var/log
 
 cc-test:	## Vider le cache de lenvironnement de test
 	$(SYMFONY_CONSOLE) c:c --env=test

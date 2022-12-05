@@ -6,16 +6,16 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: userName
         all_users:
             chain:
-                providers: ['app_user_provider' ]
+                providers: ['app_user_provider']
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             stateless: true
+            user_checker: App\Security\UserChecker
             provider: app_user_provider
             json_login:
                 check_path: /authentication_token

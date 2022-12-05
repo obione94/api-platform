@@ -3,36 +3,118 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
+use App\Controller\RegistrationConfirmationController;
+use App\Controller\RegistrationController;
 use App\Repository\UserRepository;
+use App\State\RegistrationStateProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Metadata\Post;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ApiResource(
-    routePrefix:"/api",
-    mercure: true,
+    operations: [
+        new Get(),
+        new Put(),
+        new Delete(),
+        new GetCollection(),
+        new Post(),
+        new Put(
+            uriTemplate: '/registration',
+            controller: RegistrationController::class,
+            openapiContext: [
+                "summary" => "Enregistre un utilisateur avec envoie de mail d'un lien de confirmation valable 3 heures",
+                "parameters" => [],
+            ],
+            paginationEnabled: false,
+            normalizationContext: ["groups" => ["userName"]],
+            filters: [],
+            read: false,
+            name: 'register',
+            processor: RegistrationStateProcessor::class
+        ),
+        new Get(
+            uriTemplate: '/registration_confirmation',
+            controller: RegistrationConfirmationController::class,
+            openapiContext: [
+                "summary" => "Confirme l'inscription",
+                "parameters" => [
+                    [
+                        "in" => 'query',
+                        "name" => "expires",
+                        "schema" => [
+                            "type"=> "integer",
+                        ],
+                    ],
+                    [
+                        "in" => 'query',
+                        "name" => "signature",
+                        "schema" => [
+                            "type"=> "string",
+                        ],
+                    ],
+                    [
+                        "in" => 'query',
+                        "name" => "token",
+                        "schema" => [
+                            "type"=> "string",
+                        ],
+                    ],
+                ],
+            ],
+            paginationEnabled: false,
+
+            filters: [],
+            read: false,
+            name: 'registration_confirmation'
+        ),
+    ],
+    routePrefix: "/api",
+    normalizationContext: ["groups" => ["read"]],
+    denormalizationContext: ["groups" => ["write"]],
+    mercure: true
 )
 ]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(
+    fields: "userName", message: 'already existe', errorPath: 'userName',ignoreNull: false
+)]
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["read"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(["read","write","userName"])]
+    #[Assert\Email]
     private ?string $userName = null;
 
     #[ORM\Column]
-    private array $roles = [];
+    #[Groups(["read"])]
+    private array $roles = ["USER"];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(["write"])]
     private ?string $password = null;
+
+    #[ORM\Column]
+    #[Groups(["read"])]
+    private ?bool $isVerified = false;
+
 
     public function getId(): ?int
     {
@@ -102,5 +184,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 }
