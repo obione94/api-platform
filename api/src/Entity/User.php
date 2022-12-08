@@ -6,11 +6,16 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
-use App\Controller\RegistrationConfirmationController;
+use App\Controller\ConfirmationEmailController;
+use App\Controller\VerifyEmailController;
 use App\Controller\RegistrationController;
+use App\DTO\User\UserConfirmationEmailDTO;
 use App\Repository\UserRepository;
 use App\State\RegistrationStateProcessor;
+use App\State\UserConfirmationEmailProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +27,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ApiResource(
     operations: [
         new Get(),
-        new Put(),
+        new Patch(),
         new Delete(),
         new GetCollection(),
         new Post(),
@@ -33,47 +38,42 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 "summary" => "Enregistre un utilisateur avec envoie de mail d'un lien de confirmation valable 3 heures",
                 "parameters" => [],
             ],
-            paginationEnabled: false,
+           // paginationEnabled: false,
             normalizationContext: ["groups" => ["userName"]],
-            filters: [],
+           // filters: [],
             read: false,
             name: 'register',
             processor: RegistrationStateProcessor::class
         ),
-        new Get(
-            uriTemplate: '/registration_confirmation',
-            controller: RegistrationConfirmationController::class,
+        new Put(
+            uriTemplate: '/verify_email',
+            controller: VerifyEmailController::class,
+            //class: UserConfirmationEmailDTO::class,
+           // defaults : ["token" => "string" ],
             openapiContext: [
                 "summary" => "Confirme l'inscription",
+                /*"requestBody" => [
+                    "content" => [
+                        "application/json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "token" => [
+                                        "type" => "string",
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],*/
                 "parameters" => [
-                    [
-                        "in" => 'query',
-                        "name" => "expires",
-                        "schema" => [
-                            "type"=> "integer",
-                        ],
-                    ],
-                    [
-                        "in" => 'query',
-                        "name" => "signature",
-                        "schema" => [
-                            "type"=> "string",
-                        ],
-                    ],
-                    [
-                        "in" => 'query',
-                        "name" => "token",
-                        "schema" => [
-                            "type"=> "string",
-                        ],
-                    ],
                 ],
             ],
-            paginationEnabled: false,
-
-            filters: [],
-            read: false,
-            name: 'registration_confirmation'
+            normalizationContext: ["groups" => ["read"]],
+            denormalizationContext: ["groups" => ["token"]],
+            input: UserConfirmationEmailDTO::class,
+            name: 'verify_email',
+            processor: UserConfirmationEmailProcessor::class
         ),
     ],
     routePrefix: "/api",
@@ -112,7 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column]
-    #[Groups(["read"])]
+    #[Groups(["read","verify"])]
     private ?bool $isVerified = false;
 
 
@@ -198,3 +198,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 }
+

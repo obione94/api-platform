@@ -22,7 +22,7 @@ class NixillaJWTEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function encode(array $data)
+    public function encode(array $data): string
     {
         try {
             return JWT::encode($data, $this->key);
@@ -35,7 +35,7 @@ class NixillaJWTEncoder implements JWTEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function decode($token)
+    public function decode($token): array
     {
         try {
             return (array) JWT::decode($token, $this->key);

@@ -33,6 +33,12 @@ services:
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\State\UserProcessor.inner']
+        #tags: [ 'api_platform.state_processor' ]    
+    App\State\UserConfirmationEmailProcessor:
+        bind:
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+        # Uncomment only if autoconfiguration is disabled
+        #arguments: ['@App\State\UserProcessor.inner']
         #tags: [ 'api_platform.state_processor' ]
     App\Security\Encoder\NixillaJWTEncoder:
         arguments:

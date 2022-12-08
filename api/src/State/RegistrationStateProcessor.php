@@ -6,7 +6,7 @@ use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
-use App\Security\Encoder\NixillaJWTEncoder;
+use App\Security\Token\ConfirmationEmailToken;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 
@@ -16,7 +16,7 @@ class RegistrationStateProcessor implements ProcessorInterface
     public function __construct(
         private ProcessorInterface $persistProcessor,
         private ProcessorInterface $removeProcessor,
-        private NixillaJWTEncoder $nixillaJWTEncoder,
+        private ConfirmationEmailToken $confirmationEmailToken,
         private MailerInterface $mailer,
     )
     {
@@ -35,8 +35,12 @@ class RegistrationStateProcessor implements ProcessorInterface
 
     private function sendWelcomeEmail(User $user)
     {
-        $data = ["userName" => $user->getUserName()];
-        $token = $this->nixillaJWTEncoder->encode($data);
+        $data = [
+            "userName" => $user->getUserName(),
+            "expires" => time()+(60*10),
+        ];
+
+        $token = $this->confirmationEmailToken->encode($data);
         $email = new TemplatedEmail();
         $email->from('lemanour.david@gmail.com');
         $email->to($user->getUserName());
