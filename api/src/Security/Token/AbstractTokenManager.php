@@ -25,15 +25,7 @@ abstract class AbstractTokenManager implements EncoderInterface
     {
         $payload = $this->decode($token);
 
-        if (null === ($payload["expires"] ?? null)) {
-            return false;
-        }
-
-        if ($this->isExpiresToken($payload)) {
-            //return false;
-        }
-
-        return true;
+        return !($this->isExpiresToken((int) $payload["expires"] ?? 0));
     }
 
     public function decode($token): array
@@ -46,9 +38,9 @@ abstract class AbstractTokenManager implements EncoderInterface
         return $this->nixillaJWTEncoder->encode($payload);
     }
 
-    public function isExpiresToken(array $payload): bool
+    public function isExpiresToken(int $expires): bool
     {
-        return time() > $payload["expires"];
+        return !(time() < $expires);
     }
 
 }

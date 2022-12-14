@@ -2,6 +2,7 @@
 
 namespace App\Security\Token;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Security\Encoder\NixillaJWTEncoder;
 
@@ -12,7 +13,17 @@ class ConfirmationEmailToken extends AbstractTokenManager
         private readonly UserRepository $userRepository
     )
     {
-            parent::__construct($nixillaJWTEncoder);
+        parent::__construct($nixillaJWTEncoder);
+    }
+
+    public function getUserEmail(string $token) :string
+    {
+        return parent::decode($token)["userName"] ?? "";
+    }
+
+    public function generateConfirmationEmailToken(User $user, int $expires = 60000): string
+    {
+        return parent::generateToken(["userName" => $user->getUserName()], $expires);
     }
 
     public function isValidToken(string $token): bool
@@ -20,20 +31,13 @@ class ConfirmationEmailToken extends AbstractTokenManager
         if (false === parent::isValidToken($token)) {
             return false;
         }
+
         $payload = parent::decode($token);
 
-        if (null === ($payload['userName']??null)) {
-            return false;
-        }
-
-        if (false === $this->isValidUser($payload['userName'])) {
-            return false;
-        }
-
-        return true;
+        return $this->isValidUser($payload['userName'] ?? "");
     }
 
-    public function isValidUser(string $user): bool
+    private function isValidUser(string $user): bool
     {
         return !(null === $this->userRepository->loadUserByIdentifier($user));
     }

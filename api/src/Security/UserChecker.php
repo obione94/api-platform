@@ -11,7 +11,6 @@ class UserChecker implements UserCheckerInterface
 {
     public function checkPreAuth(UserInterface $user): void
     {
-
         if (!$user instanceof AppUser) {
             return;
         }
@@ -20,7 +19,6 @@ class UserChecker implements UserCheckerInterface
             // the message passed to this exception is meant to be displayed to the user
             throw new CustomUserMessageAccountStatusException('Your user account no verify.');
         }
-
     }
 
     public function checkPostAuth(UserInterface $user): void

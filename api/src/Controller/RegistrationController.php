@@ -17,7 +17,6 @@ class RegistrationController extends AbstractController
 
     public function __invoke(User $user, Request $request): User
     {
-        dump($request->attributes->all());
         $user->setIsVerified(false);
         $user->setRoles(["ROLE_USER",]);
         $plainPassword = $user->getPassword();

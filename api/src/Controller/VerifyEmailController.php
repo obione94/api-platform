@@ -20,7 +20,6 @@ class VerifyEmailController extends AbstractController
 
     public function __invoke(UserConfirmationEmailDTO $token, Request $request): UserConfirmationEmailDTO
     {
-        dump($request->attributes->all());
         return $token;
     }
 

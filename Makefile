@@ -60,7 +60,7 @@ dsc-test: cc-test  ## Creation BDD sqlLite de test
 	$(SH_PHP_DOCKER_COMPOSE_EXEC) "bin/console doctrine:schema:update --force --env=test && cp var/cache/test/app_test.db var/cache/test/original_test.db"
 
 test-unit: ## clearlaunch test unit
-	$(SH_PHP_DOCKER_COMPOSE_EXEC) "-d xdebug.enable=1 -d xdebug.mode=coverage -d memory_limit=-1 bin/phpunit --coverage-html ./var/coverage"
+	$(SH_PHP_DOCKER_COMPOSE_EXEC) " XDEBUG_ENABLE=1 XDEBUG_MODE=coverage memory_limit=-1 bin/phpunit --coverage-html ./var/coverage"
 ## —— Others 🛠️️ ———————————————————————————————————————————————————————————————
 help: ## Liste des commandes
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
