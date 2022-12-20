@@ -8,27 +8,71 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
+use App\Controller\SendLinkResetPassword;
+use App\Controller\SendLinkVerifyEmail;
 use App\Controller\VerifyEmailController;
 use App\Controller\RegistrationController;
 use App\DTO\User\UserConfirmationEmailDTO;
 use App\Repository\UserRepository;
+use App\State\Registration\SendLink\SendLinkResetPasswordStateProcessor;
 use App\State\RegistrationStateProcessor;
 use App\State\UserConfirmationEmailProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ApiPlatform\Metadata\Post;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ApiResource(
+
     operations: [
         new Get(),
         new Patch(),
         new Delete(),
         new GetCollection(),
-        new Post(),
+        new Get(
+            uriTemplate: '/sendLinkResetPassword/{userName}',
+            uriVariables: [
+                "userName"
+            ],
+            controller: SendLinkResetPassword::class,
+            openapiContext: [
+                "summary" => "Envoie d'un lien reset password",
+                "parameters" => [
+                    [
+                        "in" => "path",
+                        "name" => "userName"
+                    ],
+                ],
+            ],
+            filters: [
+            ],
+            read: false,
+            denormalizationContext: ["groups" => ["read"]],
+            name: 'send_link_reset_password',
+        ),
+        new Get(
+            uriTemplate: '/sendLinkVerifyEmail/{userName}',
+            uriVariables: [
+                "userName"
+            ],
+            controller: SendLinkVerifyEmail::class,
+            openapiContext: [
+                "summary" => "Envoie d'un lien valider l'email",
+                "parameters" => [
+                    [
+                        "in" => "path",
+                        "name" => "userName"
+                    ],
+                ],
+            ],
+            filters: [
+            ],
+            read: false,
+            denormalizationContext: ["groups" => ["read"]],
+            name: 'send_link_verify_email',
+        ),
         new Put(
             uriTemplate: '/registration',
             controller: RegistrationController::class,
@@ -77,7 +121,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     routePrefix: "/api",
     normalizationContext: ["groups" => ["read"]],
     denormalizationContext: ["groups" => ["write"]],
-    mercure: true
+    mercure: true,
 )
 ]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -88,7 +132,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column]
     #[Groups(["read"])]
     private ?int $id = null;
@@ -96,6 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(["read","write","userName"])]
     #[Assert\Email]
+
     private ?string $userName = null;
 
     #[ORM\Column]

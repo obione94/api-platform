@@ -6,7 +6,6 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class RegistrationController extends AbstractController
 {
@@ -22,10 +21,6 @@ class RegistrationController extends AbstractController
         $plainPassword = $user->getPassword();
         $password = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($password);
-
-        if (false === $this->passwordHasher->isPasswordValid($user, $plainPassword)) {
-            throw new BadCredentialsException('Password is not valid ');
-        }
 
         return $user;
     }

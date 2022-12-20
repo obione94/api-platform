@@ -26,6 +26,9 @@ services:
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@.inner' ]
+    App\OpenApi\SendTokenDecorator:
+        decorates: 'api_platform.openapi.factory'
+        arguments: [ '@.inner' ]
     # ...
     App\State\RegistrationStateProcessor:
         bind:
@@ -37,6 +40,7 @@ services:
     App\State\UserConfirmationEmailProcessor:
         bind:
             $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+            
         # Uncomment only if autoconfiguration is disabled
         #arguments: ['@App\State\UserProcessor.inner']
         #tags: [ 'api_platform.state_processor' ]

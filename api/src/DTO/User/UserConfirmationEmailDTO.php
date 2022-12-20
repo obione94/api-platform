@@ -1,6 +1,7 @@
 <?php
 
 namespace App\DTO\User;
+
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Metadata\ApiResource;
 
@@ -17,6 +18,7 @@ final class UserConfirmationEmailDTO
     {
         $this->token = $token;
     }
+
     /**
      * @return mixed
      */
