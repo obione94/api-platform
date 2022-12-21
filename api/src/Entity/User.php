@@ -46,10 +46,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                     ],
                 ],
             ],
+            exceptionToStatus: [ProductNotFoundException::class => 404],
+            denormalizationContext: ["groups" => ["read"]],
             filters: [
             ],
             read: false,
-            denormalizationContext: ["groups" => ["read"]],
             name: 'send_link_reset_password',
         ),
         new Get(

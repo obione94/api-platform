@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Exception\ProductNotFoundException;
 use App\Repository\UserRepository;
 use App\Service\Mail\MailResetPassword;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,13 +21,19 @@ class SendLinkResetPassword extends AbstractController
         $this->mailResetPassword = $mailResetPassword;
     }
 
+    /**
+     * @throws ProductNotFoundException
+     */
     public function __invoke(Request $request): User
     {
         if (null !== ($user = $this->userRepository->loadUserByIdentifier($request->get("userName")))) {
             $this->mailResetPassword->send($user, 600);
+
+            return $user;
         }
 
-        return $user;
+        throw new ProductNotFoundException(sprintf('The mail "%s" does not exist.', $request->get("userName")));
+
     }
 
 }
