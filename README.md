@@ -14,3 +14,7 @@ The official project documentation is available **[on the API Platform website](
 ## Credits
 
 Created by [Kévin Dunglas](https://dunglas.fr). Commercial support available at [Les-Tilleuls.coop](https://les-tilleuls.coop).
+
+
+[open api](https://oai.github.io/Documentation/specification-paths.html),
+[swagger-ui](https://swagger.io/tools/swagger-ui)

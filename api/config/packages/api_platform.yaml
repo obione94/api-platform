@@ -9,7 +9,8 @@ api_platform:
         # Validation exception
         ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
         App\Exception\ProductNotFoundException: 404
-    title: Hello API Platform
+    title: API Platform Gestion utilisateur
+    description: mon api test de base avec le package gestion utilisteur
     version: 1.0.0
     # Mercure integration, remove if unwanted
     mercure: ~
@@ -23,3 +24,24 @@ api_platform:
             JWT:
                 name: Authorization
                 type: header
+    openapi:
+        # The contact information for the exposed API.
+        contact:
+            # The identifying name of the contact person/organization.
+            name: o_by_one
+            # The URL pointing to the contact information. MUST be in the format of a URL.
+            url: xnxx.com
+            # The email address of the contact person/organization. MUST be in the format of an email address.
+            email: lemanour.david@gmail.com
+    formats:
+        jsonld:
+            mime_types: [ 'application/ld+json' ]
+        
+        json:
+            mime_types: [ 'application/json' ]
+        
+        html:
+            mime_types: [ 'text/html' ]
+            
+    #resource_class_directories:
+        #- '%kernel.project_dir%/src/DTO'

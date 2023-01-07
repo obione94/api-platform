@@ -33,16 +33,42 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         new GetCollection(),
         new Get(
             uriTemplate: '/sendLinkResetPassword/{userName}',
-            uriVariables: [
-                "userName"
-            ],
+            uriVariables: ["userName"],
             controller: SendLinkResetPassword::class,
             openapiContext: [
+                "tags" => [
+                    "Account"
+                ],
                 "summary" => "Envoie d'un lien reset password",
+                "description" => "Si le userName existe, il envoie a l'adresse userName un lien donnant acces a un formulaire pour modifier sont mot de passe",
+                "operationId" => "resetPassword",
+                "responses" => [
+                    "200" => [
+                        "description" => "opération effectué avec succes",
+                        "content" => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/User-read',
+                                ],
+                            ],
+                        ]
+                    ],
+                    "404" => [
+                        "description" => "Erreur inconnue ",
+                    ],
+                    "400" => [
+                        "description" => "UserName not found",
+                    ],
+                ],
                 "parameters" => [
                     [
                         "in" => "path",
-                        "name" => "userName"
+                        "name" => "userName",
+                        "required" => true,
+                        "schema" => [
+                            "type" => "string",
+                        ],
+                        "example" => "cocoro@yopmail.com",
                     ],
                 ],
             ],
@@ -64,14 +90,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 "parameters" => [
                     [
                         "in" => "path",
-                        "name" => "userName"
+                        "name" => "userName",
+                        "required" => true,
                     ],
                 ],
             ],
+            denormalizationContext: ["groups" => ["read"]],
             filters: [
             ],
             read: false,
-            denormalizationContext: ["groups" => ["read"]],
             name: 'send_link_verify_email',
         ),
         new Put(
