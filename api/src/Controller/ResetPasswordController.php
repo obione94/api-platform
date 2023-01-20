@@ -72,9 +72,6 @@ class ResetPasswordController extends AbstractController
     #[Route('/api/sendToken', name: 'send_token_password')]
     public function sendTokenChangePassword(Request $request, EmailDTO $emailDTO): Response
     {
-        dump($emailDTO);
-        dump($request->get('userEmail'));
-        dump($request->getContent());
         return new Response(json_encode(["response"=> "string"]));
     }
 

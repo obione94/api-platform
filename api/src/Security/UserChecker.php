@@ -24,7 +24,7 @@ class UserChecker implements UserCheckerInterface
     public function checkPostAuth(UserInterface $user): void
     {
         if (!$user instanceof AppUser) {
-            return;
+            throw new CustomUserMessageAccountStatusException('Your user account not valid');
         }
     }
 }

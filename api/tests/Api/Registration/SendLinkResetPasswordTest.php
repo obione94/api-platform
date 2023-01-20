@@ -2,14 +2,11 @@
 
 namespace App\Tests\Api\Registration;
 
-use App\Security\Token\ChangePasswordToken;
-use App\Service\Mail\MailResetPassword;
 use App\Tests\Tools\AbstractApiTestCase;
-use Symfony\Component\Mailer\MailerInterface;
 
 class SendLinkResetPasswordTest extends AbstractApiTestCase
 {
-    const API_REGISTRATION = "/api/registration";
+    const API_SEND_LINK = "/api/sendLinkResetPassword/";
     const HEADERS = ['Content-Type' => 'application/json'];
 
     /**
@@ -27,7 +24,7 @@ class SendLinkResetPasswordTest extends AbstractApiTestCase
         return [
             [
                 'GET',
-                "/api/sendLinkResetPassword/totoro",
+                self::API_SEND_LINK."totoro",
                 [
                     'headers' => self::HEADERS
                 ],
@@ -41,14 +38,14 @@ class SendLinkResetPasswordTest extends AbstractApiTestCase
             ],
             [
                 'GET',
-                "/api/sendLinkResetPassword/test@example.com",
+                self::API_SEND_LINK."test@example.com",
                 [
                     'headers' => self::HEADERS
                 ],
                 200,
                 [
                     "@context"=>"/contexts/User",
-                    '@id' => '/api/sendLinkResetPassword/test@example.com',
+                    '@id' => self::API_SEND_LINK.'test@example.com',
                     "@type"=>"User",
                     'id' => 1,
                     'userName' => 'test@example.com',

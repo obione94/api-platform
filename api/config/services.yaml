@@ -26,9 +26,7 @@ services:
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@.inner' ]
-    App\OpenApi\SendTokenDecorator:
-        decorates: 'api_platform.openapi.factory'
-        arguments: [ '@.inner' ]
+
     # ...
     App\State\RegistrationStateProcessor:
         bind:

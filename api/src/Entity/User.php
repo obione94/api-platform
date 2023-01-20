@@ -36,6 +36,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             uriVariables: ["userName"],
             controller: SendLinkResetPassword::class,
             openapiContext: [
+                "security" => [],
                 "tags" => [
                     "Account"
                 ],
@@ -74,6 +75,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             ],
             exceptionToStatus: [ProductNotFoundException::class => 404],
             denormalizationContext: ["groups" => ["read"]],
+            security: "is_granted('PUBLIC_ACCESS')",
             filters: [
             ],
             read: false,
@@ -86,6 +88,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             ],
             controller: SendLinkVerifyEmail::class,
             openapiContext: [
+                "tags" => [
+                    "Account"
+                ],
                 "summary" => "Envoie d'un lien valider l'email",
                 "parameters" => [
                     [
@@ -121,6 +126,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             //class: UserConfirmationEmailDTO::class,
            // defaults : ["token" => "string" ],
             openapiContext: [
+                "tags" => [
+                    "Account"
+                ],
                 "summary" => "Confirme l'inscription",
                 /*"requestBody" => [
                     "content" => [
@@ -168,7 +176,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(["read","write","userName"])]
     #[Assert\Email]
-
     private ?string $userName = null;
 
     #[ORM\Column]
