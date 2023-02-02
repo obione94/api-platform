@@ -26,6 +26,6 @@ class RegistrationStateProcessor implements ProcessorInterface
         }
 
         $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-        $this->mailVerifyEmail->send($data);
+        //$this->mailVerifyEmail->send($data);
     }
 }
