@@ -2,9 +2,7 @@ version: "3.4"
 
 services:
   php:
-    build:
-      context: ./api
-      target: app_php
+    image: ${IMAGES_PREFIX:-}app-php
     depends_on:
       - database
     restart: unless-stopped
@@ -26,16 +24,12 @@ services:
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
 
   pwa:
-    build:
-      context: ./pwa
-      target: prod
+    image: ${IMAGES_PREFIX:-}app-pwa
     environment:
       NEXT_PUBLIC_ENTRYPOINT: http://caddy
 
   caddy:
-    build:
-      context: api/
-      target: app_caddy
+    image: ${IMAGES_PREFIX:-}app-caddy
     depends_on:
       - php
       - pwa
