@@ -47,4 +47,4 @@ jobs:
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate --env=test --skip-sync
       - name: 'CODECOV couverture de test'
-        uses: 'codecov/codecov-action@v1'
+        uses: 'codecov/codecov-action@v3'
