@@ -17,6 +17,8 @@ jobs:
       - name: Pull images
         run: docker compose pull --ignore-pull-failures || true
       - name: Start services
+        env: # Or as an environment variable
+          MAILER_DSN: ${{ secrets.MAILER_DSN }}
         run: docker compose up --build -d
       - name: Wait for services
         run: |
@@ -46,5 +48,3 @@ jobs:
         run: docker compose exec -T php bin/phpunit --coverage-clover coverage.xml
       - name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console doctrine:schema:validate --env=test --skip-sync
-      - name: 'CODECOV couverture de test'
-        uses: 'codecov/codecov-action@v1'

@@ -35,7 +35,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         #- { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
-        - { path: ^/api/greetings, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/api/greetings, roles: IS_AUTHENTICATED_FULLY } # Allows accessing the Swagger UI
         - { path: ^/api*, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
         - { path: ^/docs, roles: PUBLIC_ACCESS }
