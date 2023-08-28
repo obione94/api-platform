@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # parameters
-DOMAIN=${1:-"localhost"}
+DOMAIN=${1:-"obione-lab.ovh"}
 DOMAIN_URL="https://www.${DOMAIN}"
 CERTS_DIR="certs"
 CERT_PEM_FILE="${CERTS_DIR}/local.cert.pem"
