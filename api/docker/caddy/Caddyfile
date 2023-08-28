@@ -49,13 +49,21 @@ obione-lab.ovh {
 }
 
 
-(ssl_certs_local) {
-	tls "/data/certs/localhost.cert.pem" "/data/certs/localhost.key.pem"
-}
-# host->container for the frontend webapp
-localhost caddy {
-	import ssl_certs_local
-	@pwa expression `(
+    (ssl_certs_local) {
+        tls "/data/certs/localhost.cert.pem" "/data/certs/localhost.key.pem"
+    }
+    {
+            # Debug
+            {$CADDY_DEBUG}
+    }
+
+    {$SERVER_NAME}
+
+    log
+
+    # Matches requests for HTML documents, for static files and for Next.js files,
+    # except for known API paths and paths with extensions handled by API Platform
+    @pwa expression `(
             header({'Accept': '*text/html*'})
             && !path(
                 '/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
@@ -89,13 +97,9 @@ localhost caddy {
 
         # Comment the following line if you don't want Next.js to catch requests for HTML documents.
         # In this case, they will be handled by the PHP app.
-        reverse_proxy @pwa http://{$PWA_UPSTREAM}
+        #reverse_proxy @pwa http://{$PWA_UPSTREAM}
 
         php_fastcgi unix//var/run/php/php-fpm.sock
         encode zstd gzip
         file_server
     }
-}
-
-
-
