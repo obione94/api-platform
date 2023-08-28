@@ -53,7 +53,7 @@ obione-lab.ovh {
 	tls "/data/certs/localhost.cert.pem" "/data/certs/localhost.key.pem"
 }
 # host->container for the frontend webapp
-localhost {
+localhost caddy {
 	import ssl_certs_local
 	@pwa expression `(
             header({'Accept': '*text/html*'})
