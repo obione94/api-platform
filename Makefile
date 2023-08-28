@@ -13,6 +13,7 @@ install: build start ## Lancer les containers docker
 	$(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction
 
 build:	## Lancer les containers docker
+	sh install-ssl-certificates.sh
 	$(DOCKER_COMPOSE) build --pull --no-cache
 
 start:	## Lancer les containers docker
